@@ -8,16 +8,16 @@ var message4 = "  ";
 
 const canvas = document.querySelector('.canvas');
 const canvasCtx = canvas.getContext("2d", { willReadFrequently: true });
-const mainSection = document.querySelector('.main-controls');
-var border_canvas_plot_left ;
+// const mainSection = document.querySelector('.main-controls');
+var border_canvas_plot_left;
 
-var border_canvas_plot_right ;
-var border_canvas_plot_bottom ;
-var border_canvas_plot_top ;
+var border_canvas_plot_right;
+var border_canvas_plot_bottom;
+var border_canvas_plot_top;
 
 applyOrientation();
 
-var imageSpectrogram = new Array(40).fill(0);
+// var imageSpectrogram = new Array(40).fill(0);
 var counter = 0;
 var stop_sound = 0;
 
@@ -44,11 +44,11 @@ if (navigator.mediaDevices.getUserMedia) {
     };
     let chunks = [];
 
-    let onSuccess = function(stream) {
+    let onSuccess = function (stream) {
         callback(stream);
     }
 
-    let onError = function(err) {
+    let onError = function (err) {
         console.log('The following error occured: ' + err);
     }
 
@@ -111,6 +111,12 @@ function callback(stream) {
 
     Plot();
 
+    /**
+     * Function to plot the current microphone data. It first gets the
+     * time and frequency data from the analyser node, then applies a
+     * window function and computes the FFT. It then plots the FFT
+     * data on the canvas and updates the labels.
+     */
     function Plot() {
         analyser.fftSize = fftSize;
         bufferLength = analyser.frequencyBinCount;
@@ -216,7 +222,7 @@ function callback(stream) {
         canvasCtx.fillStyle = 'lightblue';
         canvasCtx.fillRect(border_canvas_plot_top, border_canvas_plot_top, canvas.width / 10 + border_canvas_plot_left - 2 * border_canvas_plot_top, canvas.height / 10 - border_canvas_plot_top);
         canvasCtx.fillStyle = 'black';
-        canvasCtx.font =getFont(25);  
+        canvasCtx.font = getFont(25);
 
         var centro = (border_canvas_plot_top + canvas.height / 10) / 2;
         //canvasCtx.fillText(Math.round(frec_max1).toString() + " Hz", canvas.width / 40, centro);
@@ -292,7 +298,7 @@ const HSLToRGB = (h, s, l) => {
 
 function PlotMic() {
 
-    var scale_v = canvas.height/760;
+    var scale_v = canvas.height / 760;
     var atenuacion = .4;
     f_Nyquist = audioCtx.sampleRate / 2;
     canvasCtx.lineWidth = 1;
@@ -306,19 +312,19 @@ function PlotMic() {
     let x = canvas.width / 10 + border_canvas_plot_left;
 
     canvasCtx.strokeStyle = 'white';
-    var centro = ( canvas.height / 10 + border_canvas_plot_top) / 2;
+    var centro = (canvas.height / 10 + border_canvas_plot_top) / 2;
     for (let i = 0; i < my_x.length; i++) {
 
         var y = my_x[i] * atenuacion + centro;
-        
+
 
         if (i == 0) {
             canvasCtx.moveTo(x, centro);
         } else {
-            y = centro +(y-centro) * scale_v; // scale to screen size
-            if (y > canvas.height / 10 + border_canvas_plot_top- 1) {
-            y = canvas.height / 10 + border_canvas_plot_top - 1;
-        }
+            y = centro + (y - centro) * scale_v; // scale to screen size
+            if (y > canvas.height / 10 + border_canvas_plot_top - 1) {
+                y = canvas.height / 10 + border_canvas_plot_top - 1;
+            }
             canvasCtx.lineTo(x, y);
         }
 
@@ -329,14 +335,14 @@ function PlotMic() {
 }
 
 function PlotFFT() {
-    var scale_h = canvas.width/1440;
+    var scale_h = canvas.width / 1440;
 
     canvasCtx.lineWidth = 1;
     canvasCtx.strokeStyle = 'hsl(' + 360 * 0 + ',100%,50%)';
 
     canvasCtx.fillStyle = '#003B5C';
     //canvasCtx.fillStyle = 'green';
-    canvasCtx.fillRect(0, canvas.height / 10 + border_canvas_plot_top, .9 * canvas.width / 10 , .9 * canvas.height - border_canvas_plot_bottom - border_canvas_plot_top);
+    canvasCtx.fillRect(0, canvas.height / 10 + border_canvas_plot_top, .9 * canvas.width / 10, .9 * canvas.height - border_canvas_plot_bottom - border_canvas_plot_top);
 
     var y;
     let Y0 = canvas.height / 10 + border_canvas_plot_top;
@@ -355,7 +361,7 @@ function PlotFFT() {
 
             var y = Y0 + deltaY0 - deltaY0 * (mel_i - mel_i_min) / (mel_i_max - mel_i_min);
         }
-        scale_h = canvas.width/1440;
+        scale_h = canvas.width / 1440;
         let x = -my_X_abs[i] * scale_h + .9 * canvas.width / 10;
 
         var value = my_X_abs[i] / (sensibility);
@@ -375,7 +381,7 @@ function PlotFFT() {
 
     canvasCtx.beginPath();
     canvasCtx.strokeStyle = 'white';
-    sensibility = document.getElementById("sensibility").value;;
+    sensibility = document.getElementById("sensibility").value;
     for (let i = i_min; i < i_max; i++) {
 
         if (document.getElementById("scale").value == "Linear") {
@@ -410,11 +416,24 @@ function PlotFFT() {
     document.getElementById("output_sensibility").innerHTML = Math.floor(sensibility_temp);
     document.getElementById("sensibility").value = Math.floor(sensibility_temp);
 
-    canvasCtx.moveTo(-sensibility_temp *scale_h + .9 * canvas.width / 10, Y0);
+    canvasCtx.moveTo(-sensibility_temp * scale_h + .9 * canvas.width / 10, Y0);
     canvasCtx.lineTo(-sensibility_temp * scale_h + .9 * canvas.width / 10, Y0 + deltaY0);
     canvasCtx.stroke();
 }
 
+
+/**
+ * Plots the spectrogram by processing FFT data and displaying it on the canvas.
+ * 
+ * This function retrieves FFT size, calculates plotting dimensions, and updates the 
+ * canvas with the spectrogram visualization. It handles scrolling and non-scrolling 
+ * modes and uses different frequency scales (Linear or Mel). The function also 
+ * applies a colormap to represent intensity values visually.
+ *
+ * Assumes that global variables and DOM elements (e.g., `sizeFFT`, `scrolling`, 
+ * `scale`, `colormap`, `my_X_abs`, `sensibility`, etc.) are already defined and 
+ * available for use.
+ */
 
 function PlotSpectro1() {
 
@@ -481,13 +500,13 @@ function PlotSpectro1() {
 
     }
 
-    canvasCtx.font =getFont(10);  
+    canvasCtx.font = getFont(10);
 
 }
 
 
 function YaxisMarks() {
-    
+
     canvasCtx.fillStyle = 'white';
     let X0 = canvas.width / 10 + border_canvas_plot_left;
     let Y0 = canvas.height / 10 + border_canvas_plot_top;
@@ -495,7 +514,7 @@ function YaxisMarks() {
 
     canvasCtx.fillRect(.9 * canvas.width / 10, Y0 - border_canvas_plot_top, .1 * canvas.width / 10 + border_canvas_plot_left, Y0 + deltaY0);
     canvasCtx.fillStyle = "black";
-    canvasCtx.font =getFont(10);    
+    canvasCtx.font = getFont(10);
 
     canvasCtx.textAlign = 'right';
 
@@ -528,7 +547,7 @@ function YaxisMarks() {
 
 
             var mel_i = 1127.01048 * Math.log(Yaxis[j] / 700 + 1)
-                //console.log(mel_i + " " + Yaxis[j])
+            //console.log(mel_i + " " + Yaxis[j])
             var mel_i_min = 1127.01048 * Math.log(f_min / 700 + 1)
             var mel_i_max = 1127.01048 * Math.log(f_max / 700 + 1)
             var y = Y0 + deltaY0 - deltaY0 * (mel_i - mel_i_min) / (mel_i_max - mel_i_min);
@@ -557,16 +576,21 @@ function YaxisMarks() {
 
 
 
-window.onresize = function(event) {
-        applyOrientation();
-    }
+window.onresize = function (event) {
+    applyOrientation();
+}
 
+/**
+ * This function is called whenever the window is resized. It adjusts the width and height of the canvas element according to whether the window is in portrait or landscape orientation.
+ * It also adjusts the borders of the canvas element and calls the plot_colormap function.
+ * It also scrolls the window to the top.
+ */
 function applyOrientation() {
     if (window.innerHeight > window.innerWidth) {
         //alert("You are now in portrait");
         canvas.width = window.innerWidth;
         //canvas.height = (window.innerHeight);
-        canvas.height = canvas.width*400/700;
+        canvas.height = canvas.width * 400 / 700;
         //YaxisMarks();
     } else {
         //alert("You are now in landscape");
@@ -574,24 +598,24 @@ function applyOrientation() {
         canvas.height = (window.innerHeight);
         //YaxisMarks();
     }
-   border_canvas_plot_left = canvas.width / 20;
-border_canvas_plot_right = canvas.width / 10;
+    border_canvas_plot_left = canvas.width / 20;
+    border_canvas_plot_right = canvas.width / 10;
 
-var scale_v = canvas.height/760;
- border_canvas_plot_bottom = 80*scale_v;
- border_canvas_plot_top = 10*scale_v;
-plot_colormap();
-var my_element = document.getElementById("my_element");
+    var scale_v = canvas.height / 760;
+    border_canvas_plot_bottom = 80 * scale_v;
+    border_canvas_plot_top = 10 * scale_v;
+    plot_colormap();
+    var my_element = document.getElementById("my_element");
 
     my_element.scrollIntoView({
-  behavior: "smooth",
-  block: "start",
-  inline: "nearest"
-});
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest"
+    });
 
 }
- 
-    
+
+
 
 function DisplayMultiLineAlert() {
     var newLine = "\r\n"
@@ -603,7 +627,7 @@ function DisplayMultiLineAlert() {
     message += newLine;
     message += message3;
     message4 = "Screen resolution is: " + screen.width + "x" + screen.height + " " + window.screen.availWidth +
-     " " + window.screen.availHeight + " " + window.innerWidth + " " + window.innerHeight + " " + canvas.width + " " + canvas.height;
+        " " + window.screen.availHeight + " " + window.innerWidth + " " + window.innerHeight + " " + canvas.width + " " + canvas.height;
     message += newLine;
     message += message4;
     message += newLine;
@@ -614,13 +638,14 @@ function DisplayMultiLineAlert() {
 
 function plot_colormap() {
     colormap = document.getElementById("colormap").value;
-    let Y0 = Math.floor(canvas.height / 10 + border_canvas_plot_top);
-    var deltaY0 = Math.floor(.9 * canvas.height - border_canvas_plot_bottom - border_canvas_plot_top);
+    let Y0 = Math.floor(0.1 * canvas.height + border_canvas_plot_top); // eg. 101
+    var deltaY0 = Math.floor(0.9 * canvas.height - border_canvas_plot_bottom - border_canvas_plot_top); // eg. 682
+    let x0 = Math.floor(.9 * canvas.width + border_canvas_plot_top);
 
     for (let y = Y0; y <= Y0 + deltaY0; y++) {
+        // evaluate_cmap takes 0-1 values and the name => generate rgb
         var myrgb = evaluate_cmap(1 - (y - Y0) / deltaY0, colormap, false);
         canvasCtx.fillStyle = 'rgb(' + myrgb + ')';
-        let x0 = Math.floor(.9 * canvas.width + border_canvas_plot_top);
         canvasCtx.fillRect(x0, y, canvas.width / 30, 1);
     }
 }
@@ -648,7 +673,7 @@ function ColormapMarks() {
 
 
     canvasCtx.fillStyle = "black";
-    canvasCtx.font =getFont(20);  
+    canvasCtx.font = getFont(20);
 
     canvasCtx.textBaseline = "middle";
     var dB = Math.max(sensibility_temp, max_intensity);
@@ -658,20 +683,20 @@ function ColormapMarks() {
     canvasCtx.fillText(Math.floor(.5 * dB) + " dB", x0, Y0 + .5 * deltaY0)
     canvasCtx.fillText(Math.floor(.25 * dB) + " dB", x0, Y0 + .75 * deltaY0)
     canvasCtx.fillText(0 + " dB", x0, Y0 + deltaY0)
-    
+
 
     canvasCtx.textAlign = 'left';
-    canvasCtx.fillText("Time", canvas.width / 2, canvas.height - .5 * border_canvas_plot_bottom );
-    canvasCtx.fillText("Loudness (dB)", 10, canvas.height - .5 * border_canvas_plot_bottom );
-    canvasCtx.fillText("Color", canvas.width - border_canvas_plot_right, canvas.height - .5 * border_canvas_plot_bottom );
+    canvasCtx.fillText("Time", canvas.width / 2, canvas.height - .5 * border_canvas_plot_bottom);
+    canvasCtx.fillText("Loudness (dB)", 10, canvas.height - .5 * border_canvas_plot_bottom);
+    canvasCtx.fillText("Color", canvas.width - border_canvas_plot_right, canvas.height - .5 * border_canvas_plot_bottom);
 
 
 }
 
 
 function getFont(s) {
-    var fontBase = 1000;   
-    var ratio = s / fontBase;   
-    var size = canvas.width * ratio;   
-    return (size|0) + 'px sans-serif'; 
+    var fontBase = 1000;
+    var ratio = s / fontBase;
+    var size = canvas.width * ratio;
+    return (size | 0) + 'px sans-serif';
 }
