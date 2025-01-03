@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="./sgram.css">
+    </head>
+    <body>
+        <div class="flex flex-col justify-center items-center text-center border border-gray rounded-md bg-white">
+            <!-- Header -->
+            <div class="">
+                <h1 class="text-3xl p-3">Spectrogram</h1>
+                <p class="p-2">Realtime visualization of speech in spectrogram</p>
+            </div>
+
+            <!-- Body -->
+            <div class="block-container w-screen h-screen border border-gray rounded-xl bg-sky-50">
+              <!-- Controller -->
+              <div class="flex text-sm gap-2">
+                <!-- Scale -->
+                <select name="" id="scale">
+                  <option value="Linear">Scale: Linear</option>
+                  <option value="Mel">Scale: mel</option>
+                </select>
+
+                <!-- f min -->
+                <select name="" id="f_min">
+                  <option value="10">Min freq: 10 Hz</option>
+                  <option value="20">Min freq: 20 Hz</option>
+                  <option value="30">Min freq: 30 Hz</option>
+                  <option value="40">Min freq: 40 Hz</option>
+                  <option value="50" selected>Min freq: 50 Hz</option>
+                  <option value="80">Min freq: 80 Hz</option>
+                  <option value="100">Min freq: 100 Hz</option>
+                </select>
+
+                <!-- f max -->
+                <select name="" id="f_max">
+                  <option value="1000">Max freq: 1 KHz</option>
+                  <option value="2000">Max freq: 2 KHz</option>
+                  <option value="3000">Max freq: 3 KHz</option>
+                  <option value="4000">Max freq: 4 KHz</option>
+                  <option value="5000">Max freq: 5 KHz</option>
+                  <option value="10000" selected>Max freq: 10 KHz</option>
+                  <option value="15000">Max freq: 15 KHz</option>
+                  <option value="20000">Max freq: 20 KHz</option>
+                </select>  
+
+                <!-- colormap -->
+                 <div>
+
+                 </div>
+
+                 <!-- spec params -->
+                 <!-- fft size -->
+                 <!-- window -->
+                 <!-- fft -->
+                 <!-- info button -->
+                 <!-- sesibility -->
+                 <!-- scrolling checkbox -->
+                 <!-- pause checkbox -->
+
+              </div>
+
+
+              <!-- Spectrogram -->
+               <div>
+
+               </div>
+            </div>
+
+        </div>
+        <script src="./colormaps.js" async defer></script>
+        <script src="./sgram.js" async defer></script>
+    </body>
+</html>

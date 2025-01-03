@@ -247,6 +247,11 @@ function callback(stream) {
     }
 }
 
+    /**
+     * Calculates the Fast Fourier Transform (FFT) of a signal.
+     * @param {Array<number>} signal - The signal to be transformed.
+     * @return {Array<Complex>} - The FFT of the signal.
+     */
 function myFFT(signal) {
     if (signal.length == 1)
         return signal;
