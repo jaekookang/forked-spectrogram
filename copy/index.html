@@ -13,7 +13,7 @@
 </head>
 
 <body>
-  <div class="flex flex-col justify-center items-center text-center border border-gray rounded-md bg-white">
+  <div class="flex flex-col w-full justify-center items-center text-center border border-gray rounded-md bg-white">
     <!-- Header -->
     <div class="">
       <h1 id="my_element_top" class="text-3xl p-3">Spectrogram</h1>
@@ -21,9 +21,9 @@
     </div>
 
     <!-- Body -->
-    <div class="block-container w-screen h-screen border border-gray rounded-xl bg-sky-50">
+    <div class="border border-gray rounded-xl bg-sky-50 w-full">
       <!-- Controller -->
-      <div class="flex items-start text-sm gap-4 m-auto justify-center w-full">
+      <div class="flex items-start text-sm gap-4 justify-center m-2">
 
         <!-- (1) Appearance -->
         <div class="flex flex-col justify-start gap-1 w-full">
@@ -120,7 +120,9 @@
           </div>
 
           <!-- info button -->
-          <input type="button" value="Info" onclick="" />
+          <div class="rounded-md bg-slate-200 w-[4rem]">
+            <input type="button" value="Info" onclick="" />
+          </div>
 
           <!-- sesibility -->
           <div class="flex flex-col items-start">
@@ -148,8 +150,8 @@
 
 
       <!-- Spectrogram -->
-      <div>
-        <canvas class="canvas border bold w-full"></canvas>
+      <div class="w-full m-auto">
+        <canvas class="canvas border border-gray rounded-md w-full"></canvas>
       </div>
     </div>
 

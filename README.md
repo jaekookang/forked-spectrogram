@@ -11,3 +11,4 @@
     - `index.html` configured
     - `sgram.js` configured
         - controller and canvas aesthetics setup
+        - stopped until **line 148** => start from here!

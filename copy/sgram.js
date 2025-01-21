@@ -34,6 +34,8 @@ let bufferLength;
 let dataTime;
 let dataFrec;
 let fftSize = parseInt(document.getElementById("sizeFFT").value);
+let minDecibels = -40;
+let sampleRate = 44100;
 
 let frec_max1;
 let bin_width = 4;
@@ -70,7 +72,41 @@ if (navigator.mediaDevices.getUserMedia) {
 }
 
 function callback(stream) {
+    if (!audioCtx) {
+        audioCtx = new AudioContext({
+            latencyHint: 'interactive',
+            sampleRate: sampleRate,
+        })
+    }
 
+    const source = audioCtx.createMediaStreamSource(stream);
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = fftSize;
+    analyser.minDecibels = minDecibels;
+    bufferLength = analyser.frequencyBinCount;
+
+    dataTime = new Float32Array(bufferLength * 2);
+    dataFrec = new Float32Array(bufferLength);
+    const sr = audioCtx.sampleRate;
+
+    message0 = "Sampling rate: " + sr.toString() + " Hz";
+    source.connect(analyser);
+
+    Plot();
+
+    /**
+     * Function to plot the current microphone data. It first gets the
+     * time and frequency data from the analyser node, then applies a
+     * window function and computes the FFT. It then plots the FFT
+     * data on the canvas and updates the labels.
+     */
+    function Plot() {
+        // analyser.fftSize = fftSize;
+        bufferLength = analyser.frequencyBinCount;
+        dataTime = new Uint8Array(bufferLength * 2);
+        dataFrec = new Float32Array(bufferLength);
+        YaxisMarks();
+    }
 }
 
 function myFFT(signal) {
@@ -98,12 +134,29 @@ function PlotSpectro1() {
 }
 
 function YaxisMarks() {
+    canvasCtx.fillStyle = "white";
+    let X0 = canvas.width / 10 + border_canvas_plot_left;
+    let Y0 = canvas.height / 10 + border_canvas_plot_top;
+    let deltaY0 = 0.9 * canvas.height - border_canvas_plot_bottom - border_canvas_plot_top;
 
+    canvasCtx.fillRect(0.9 * canvas.width / 10, Y0 - border_canvas_plot_top, 0.1 * canvas.width / 10 + border_canvas_plot_left, Y0 + deltaY0);
+    canvasCtx.fillStyle = "black";
+    canvasCtx.font = getFont(10);
+    canvasCtx.textAlign = "right";
+
+    // Linear scale (START FROM HERE! SEE: https://github.com/jaekookang/forked-spectrogram/blob/ef19d58b42633a79fa94c8381cf17c9fdcbe5422/spectrogram.js#L527)
+    if (document.getElementById("scale").value === "Linear") {
+
+
+    // Mel scale
+    } else if (document.getElementById("scale").value == "Mel") {
+
+    }
 }
 
 function applyOrientation() {
 
-    // Adjust inner width and height
+    // Adjust inner width and height realtime
     if (window.innerHeight > window.innerWidth) {
         canvas.width = window.innerWidth;
         canvas.height = canvas.width * canvas_height_ratio;
@@ -128,6 +181,16 @@ function applyOrientation() {
     });
 }
 
+/**
+ * Plots the colormap bar on the right side of the canvas.
+ * 
+ * It first gets the colormap value from the dropdown menu,
+ * then locates the bar within the canvas on the right side.
+ * It then computes the rgb value for each y position and
+ * plots it as a single pixel. The position of the pixel is
+ * from top to bottom, and the color is from the top of the bar
+ * to the bottom.
+ */
 function plot_colormap() {
     colormap = document.getElementById("colormap").value;
 
@@ -160,6 +223,14 @@ function ColormapMarks() {
 
 }
 
+/**
+ * Get a font size based on the width of the canvas.
+ * @param {number} s - A number between 0 and 1 to scale the font size.
+ * @returns {string} A font size in pixels, e.g. '22px sans-serif'.
+ */
 function getFonts(s) {
-    
+    let fontBase = 1000;
+    let ratio = s / fontBase;
+    let size = canvas.width * ratio;
+    return (size | 0) + 'px sans-serif';
 }
