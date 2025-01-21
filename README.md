@@ -1,7 +1,13 @@
 # Spectrogram - personal exploration
 
-- See original project: https://github.com/lvillasen/Spectrogram
+- See original project: 
+    - code: https://github.com/lvillasen/Spectrogram
+    - demo: https://ciiec.buap.mx/Spectrogram/
 
 ---
-- 2024-01-03 jkang first forked
+- 2025-01-03 jkang first forked
     - trimmed the code / format
+- 2025-01-21
+    - `index.html` configured
+    - `sgram.js` configured
+        - controller and canvas aesthetics setup

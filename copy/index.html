@@ -1,80 +1,161 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="stylesheet" href="./sgram.css">
-    </head>
-    <body>
-        <div class="flex flex-col justify-center items-center text-center border border-gray rounded-md bg-white">
-            <!-- Header -->
-            <div class="">
-                <h1 class="text-3xl p-3">Spectrogram</h1>
-                <p class="p-2">Realtime visualization of speech in spectrogram</p>
-            </div>
 
-            <!-- Body -->
-            <div class="block-container w-screen h-screen border border-gray rounded-xl bg-sky-50">
-              <!-- Controller -->
-              <div class="flex text-sm gap-2">
-                <!-- Scale -->
-                <select name="" id="scale">
-                  <option value="Linear">Scale: Linear</option>
-                  <option value="Mel">Scale: mel</option>
-                </select>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./sgram.css">
+  <link rel="icon" href="assets/bars-solid.svg">
+</head>
 
-                <!-- f min -->
-                <select name="" id="f_min">
-                  <option value="10">Min freq: 10 Hz</option>
-                  <option value="20">Min freq: 20 Hz</option>
-                  <option value="30">Min freq: 30 Hz</option>
-                  <option value="40">Min freq: 40 Hz</option>
-                  <option value="50" selected>Min freq: 50 Hz</option>
-                  <option value="80">Min freq: 80 Hz</option>
-                  <option value="100">Min freq: 100 Hz</option>
-                </select>
+<body>
+  <div class="flex flex-col justify-center items-center text-center border border-gray rounded-md bg-white">
+    <!-- Header -->
+    <div class="">
+      <h1 id="my_element_top" class="text-3xl p-3">Spectrogram</h1>
+      <p class="p-2">Realtime visualization of speech in spectrogram</p>
+    </div>
 
-                <!-- f max -->
-                <select name="" id="f_max">
-                  <option value="1000">Max freq: 1 KHz</option>
-                  <option value="2000">Max freq: 2 KHz</option>
-                  <option value="3000">Max freq: 3 KHz</option>
-                  <option value="4000">Max freq: 4 KHz</option>
-                  <option value="5000">Max freq: 5 KHz</option>
-                  <option value="10000" selected>Max freq: 10 KHz</option>
-                  <option value="15000">Max freq: 15 KHz</option>
-                  <option value="20000">Max freq: 20 KHz</option>
-                </select>  
+    <!-- Body -->
+    <div class="block-container w-screen h-screen border border-gray rounded-xl bg-sky-50">
+      <!-- Controller -->
+      <div class="flex items-start text-sm gap-4 m-auto justify-center w-full">
 
-                <!-- colormap -->
-                 <div>
+        <!-- (1) Appearance -->
+        <div class="flex flex-col justify-start gap-1 w-full">
+          <div>
+            <h2>Appearance</h2>
+          </div>
+          <!-- Scale -->
+          <select name="" id="scale">
+            <option value="Linear">Scale: Linear</option>
+            <option value="Mel">Scale: mel</option>
+          </select>
 
-                 </div>
+          <!-- f min -->
+          <select name="" id="f_min">
+            <option value="10">Min freq: 10 Hz</option>
+            <option value="20">Min freq: 20 Hz</option>
+            <option value="30">Min freq: 30 Hz</option>
+            <option value="40">Min freq: 40 Hz</option>
+            <option value="50" selected>Min freq: 50 Hz</option>
+            <option value="80">Min freq: 80 Hz</option>
+            <option value="100">Min freq: 100 Hz</option>
+          </select>
 
-                 <!-- spec params -->
-                 <!-- fft size -->
-                 <!-- window -->
-                 <!-- fft -->
-                 <!-- info button -->
-                 <!-- sesibility -->
-                 <!-- scrolling checkbox -->
-                 <!-- pause checkbox -->
+          <!-- f max -->
+          <select name="" id="f_max">
+            <option value="1000">Max freq: 1 KHz</option>
+            <option value="2000">Max freq: 2 KHz</option>
+            <option value="3000">Max freq: 3 KHz</option>
+            <option value="4000">Max freq: 4 KHz</option>
+            <option value="5000">Max freq: 5 KHz</option>
+            <option value="10000" selected>Max freq: 10 KHz</option>
+            <option value="15000">Max freq: 15 KHz</option>
+            <option value="20000">Max freq: 20 KHz</option>
+          </select>
 
-              </div>
+          <!-- speed -->
+          <select name="" id="speed" onchange="">
+            <option value="1">Speed: 1</option>
+            <option value="2">Speed: 2</option>
+            <option value="3">Speed: 3</option>
+            <option value="4" selected>Speed: 4</option>
+            <option value="5">Speed: 5</option>
+          </select>
 
-
-              <!-- Spectrogram -->
-               <div>
-
-               </div>
-            </div>
-
+          <!-- colormap -->
+          <select name="" id="colormap" onchange="plot_colormap();">
+            <option value="jet">Colormap: jet</option>
+            <option value="hot">Colormap: hot</option>
+            <option value="Greens">Colormap: Greens</option>
+            <option value="summer">Colormap: summer</option>
+            <option value="viridis">Colormap: biridis</option>
+            <option value="turbo">Colormap: turbo</option>
+            <option value="Blues">Colormap: Blues</option>
+            <option value="terrain">Colormap: terrain</option>
+            <option value="winter">Colormap: winter</option>
+            <option value="binary">Colormap: binary</option>
+            <option value="RdPu">Colormap: RdPu</option>
+            <option value="gist_gray">Colormap: gist_gray</option>
+          </select>
         </div>
-        <script src="./colormaps.js" async defer></script>
-        <script src="./sgram.js" async defer></script>
-    </body>
+
+        <!-- (2) Spectrogram parameters -->
+        <div class="flex flex-col justify-start items-start gap-1 w-full">
+          <div>
+            <h2>Spectrogram parameters</h2>
+          </div>
+
+          <!-- fft size -->
+          <select name="" id="sizeFFT">
+            <option value="2048">Buffer size: 2048</option>
+            <option value="4096">Buffer size: 4096</option>
+            <option value="8192" selected>Buffer size: 8192</option>
+          </select>
+
+          <!-- window size -->
+          <select name="" id="window">
+            <option value="None">Window: None</option>
+            <option value="Cosine">Window: Cosine</option>
+            <option value="Hanning">Window: Hanning</option>
+            <option value="BH7" selected>Window: Blackman Harris 7</option>
+          </select>
+
+          <!-- fft method -->
+          <select name="" id="FFT">
+            <option value="myFFT" selected>FFT function: custom FFT</option>
+            <option value="WebAudio" selected>FFT function: Web Audio</option>
+          </select>
+        </div>
+
+        <!-- (3) General -->
+        <div class="flex flex-col justify-start items-start w-full">
+          <div>
+            <h2>General</h2>
+          </div>
+
+          <!-- info button -->
+          <input type="button" value="Info" onclick="" />
+
+          <!-- sesibility -->
+          <div class="flex flex-col items-start">
+            <p id="my_element">Sensibility</p>
+            <div class="flex flex-row gap-1">
+              <input type="range" id="sensibility" value="60" min="10" max="100" oninput="" />
+              <output id="output_sensibility">60</output>
+            </div>
+
+          </div>
+
+          <!-- scrolling checkbox -->
+          <div class="flex flex-row gap-1">
+            <p>Scrolling</p>
+            <input type="checkbox" id="scrolling" checked />
+          </div>
+
+          <!-- pause checkbox -->
+          <div class="flex flex-row gap-1">
+            <p>Pause</p>
+            <input type="checkbox" id="stop" />
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Spectrogram -->
+      <div>
+        <canvas class="canvas border bold w-full"></canvas>
+      </div>
+    </div>
+
+  </div>
+  <script src="./js-colormaps.js" async defer></script>
+  <script src="./sgram.js" async defer></script>
+</body>
+
 </html>
