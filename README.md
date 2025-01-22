@@ -11,4 +11,10 @@
     - `index.html` configured
     - `sgram.js` configured
         - controller and canvas aesthetics setup
-        - stopped until **line 148** => start from here!
+        - stopped at **line 148** => start from here!
+- 2025-01-22
+    - `sgram.js`
+        - `PlotMic()` done
+        - `YAxisMarks` done
+        - `myFFT` done
+        - stopped at **line 308** => start from here!

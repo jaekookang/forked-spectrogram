@@ -247,11 +247,11 @@ function callback(stream) {
     }
 }
 
-    /**
-     * Calculates the Fast Fourier Transform (FFT) of a signal.
-     * @param {Array<number>} signal - The signal to be transformed.
-     * @return {Array<Complex>} - The FFT of the signal.
-     */
+/**
+ * Calculates the Fast Fourier Transform (FFT) of a signal.
+ * @param {Array<number>} signal - The signal to be transformed.
+ * @return {Array<Complex>} - The FFT of the signal.
+ */
 function myFFT(signal) {
     if (signal.length == 1)
         return signal;
@@ -509,6 +509,17 @@ function PlotSpectro1() {
 
 }
 
+
+/**
+ * Draws the Y-axis marks on the spectrogram canvas.
+ *
+ * This function renders frequency marks on the Y-axis of the spectrogram
+ * based on the selected scale type: Linear or Mel. It calculates the
+ * appropriate positions for the frequency labels and draws them on the
+ * canvas, along with small tick marks. The Linear scale uses direct
+ * frequency values, while the Mel scale uses a logarithmic transformation.
+ * The function relies on global variables and HTML elements for configuration.
+ */
 
 function YaxisMarks() {
 
